@@ -1,4 +1,4 @@
-# 3SC Android Task
+# Cube Academy - Android Task
 
 ## Task
 Every month, we select one team member as "The Cube of the Month". This member will be selected by votes from other Cubes. Each cube will be able to nominate their colleagues, and then we will tally the votes and select one of the nominees with the highest number of votes. 
