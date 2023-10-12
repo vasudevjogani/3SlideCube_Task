@@ -15,6 +15,12 @@ You are responsible for building an Android app to make this process easier for 
 - Designs: [Figma](https://www.figma.com/file/j9opgFDjgfmgsIcTpkvyEt/FED-Mini-Task-Flow?type=design&mode=design&t=cvBjihTJPiiIVaGK-1)
 - API documentation: [OpenAPI docs](https://cube-academy-api.cubeapis.com/docs)
 
+### API requests
+
+Please read the [OpenAPI docs](https://cube-academy-api.cubeapis.com/docs) documentation before beginning.
+
+You need to include an Authorization header to your API calls after you successfully register and login the user. The API uses a Bearer token for Authorization. 
+
 ### What do we expect from the app?
 -	The app should demonstrate good use of Kotlin technologies.
 -	We're looking for organised, clean, readable and documented code. Make sure you structure the files cleanly and define the classes and functions in a readable way. 
@@ -39,5 +45,10 @@ You are responsible for building an Android app to make this process easier for 
 -	Overall solution - does it accomplish the task and how well?
 
 ## Submission
-For submission, send us the link to your git repository (You can choose your favourite repository. It could be GitHub, GitLab, etc. just make sure we have access to it)
+For submission, send us the link to your git repository (You can choose your favourite repository. It could be GitHub, GitLab, etc. just make sure we have access to it) to [cubeacademy@3sidedcube.com](mailto:cubeacademy@3sidedcube.com?subject=Cube%20Academy%20Test)
+
+## Questions?
+
+If you have any questions about any of the above please get in touch with us at [cubeacademy@3sidedcube.com](mailto:cubeacademy@3sidedcube.com?subject=Cube%20Academy%20Test)
+
 
