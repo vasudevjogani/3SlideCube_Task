@@ -17,7 +17,9 @@ As part of your assessment, you are required to complete an android application 
 
 Please read the [OpenAPI docs](https://cube-academy-api.cubeapis.com/docs) documentation before beginning.
 
-You need to include an Authorization header to your API calls after you successfully register and login the user. The API uses a Bearer token for Authorization. 
+You need to include an Authorization header to your API calls after you successfully register and login the user. The API uses a Bearer token for Authorization.
+
+** Since we don't have a login page, you need to call the register/login endpoint from a software like postman and store the returned Auth Token in the gradle.properties. We have left an empty variable in there for you **
 
 ### Your contribution
 As stated earlier, parts of the code that require your implementation are marked with a TODO comment. These parts include:
