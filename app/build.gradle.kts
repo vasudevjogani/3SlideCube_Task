@@ -54,6 +54,9 @@ dependencies {
 	implementation("com.google.code.gson:gson:2.10.1")
 	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 	implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+	implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+	//Event Bus(safe broadcast)
+	implementation ("org.greenrobot:eventbus:3.2.0")
 
 	// Hilt
 	implementation("com.google.dagger:hilt-android:2.48")

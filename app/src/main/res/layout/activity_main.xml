@@ -1,94 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:background="@drawable/bg_green_page"
-	android:orientation="vertical"
-	tools:context=".activities.MainActivity">
 
-	<androidx.appcompat.widget.Toolbar
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/black"
-		android:paddingVertical="20dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_green_page"
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:importantForAccessibility="no"
-			android:layout_gravity="center_horizontal"
-			android:src="@drawable/ic_3sc_toolbar" />
-	</androidx.appcompat.widget.Toolbar>
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:paddingVertical="@dimen/_20sdp">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		style="@style/bold_headline_medium"
-		android:layout_marginHorizontal="20dp"
-		android:layout_marginVertical="24dp"
-		android:text="@string/your_nominations_title"
-		android:textAllCaps="true"
-		android:textColor="@color/black" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_3sc_toolbar" />
+    </androidx.appcompat.widget.Toolbar>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:id="@+id/empty_container"
-		android:background="@color/grey_light"
-		android:gravity="center_horizontal"
-		android:layout_weight="1"
-		android:orientation="vertical"
-		android:paddingHorizontal="30dp">
+    <TextView
+        style="@style/bold_headline_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="24dp"
+        android:text="@string/your_nominations_title"
+        android:textAllCaps="true"
+        android:textColor="@color/black" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:importantForAccessibility="no"
-			android:layout_marginTop="70dp"
-			android:src="@drawable/ic_empty" />
+    <LinearLayout
+        android:id="@+id/empty_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/grey_light"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        android:visibility="gone">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			style="@style/bold_headline_medium"
-			android:layout_marginTop="24dp"
-			android:text="@string/empty_body"
-			android:textAlignment="center"
-			android:textAllCaps="true"
-			android:textColor="@color/grey_dark" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_70sdp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_empty" />
 
-	</LinearLayout>
+        <TextView
+            style="@style/bold_headline_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:text="@string/empty_body"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/grey_dark" />
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:id="@+id/nominations_list"
-		android:background="@color/white"
-		android:layout_weight="1"
-		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-		android:visibility="gone"
-		tools:listitem="@layout/view_nomination_list_item" />
+    </LinearLayout>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/white"
-		android:clipChildren="false"
-		android:clipToPadding="false"
-		android:elevation="10dp"
-		android:paddingHorizontal="24dp"
-		android:paddingVertical="20dp">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/sw_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-		<androidx.appcompat.widget.AppCompatButton
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/create_button"
-			style="@style/button"
-			android:text="@string/create_new_nomination" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-	</LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nominations_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/view_nomination_list_item" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_24sdp"
+        android:paddingVertical="@dimen/_20sdp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/create_button"
+            style="@style/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_new_nomination" />
+
+    </LinearLayout>
 
 </LinearLayout>
+

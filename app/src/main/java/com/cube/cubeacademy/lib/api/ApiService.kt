@@ -13,7 +13,7 @@ interface ApiService {
 	suspend fun getAllNominations(): DataWrapper<List<Nomination>>
 
 	@GET("api/nominee")
-	suspend fun getAllNominees(): DataWrapper<List<Nominee>>
+	suspend fun getAllNominees(): DataWrapper<ArrayList<Nominee>>
 	
 	@FormUrlEncoded
 	@POST("api/nomination")
