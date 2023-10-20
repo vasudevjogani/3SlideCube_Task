@@ -1,11 +1,18 @@
 package com.cube.cubeacademy.activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.cube.cubeacademy.R
@@ -53,6 +60,8 @@ class CreateNominationActivity : AppCompatActivity() {
 
         setListeners()
         callNomineeList()
+
+        setBoldAndColorSpannable(binding.tvCubeOf, getString(R.string.cube_of_the_month))
     }
 
     /**
@@ -206,5 +215,18 @@ class CreateNominationActivity : AppCompatActivity() {
      */
     private fun updateSubmitButtonState() {
         binding.submitButton.isEnabled = selectedNomineeId.isNotEmpty() && !binding.etReasoning.text.isNullOrEmpty() && isProcess
+    }
+
+    private fun setBoldAndColorSpannable(textView: TextView, vararg portions: String) {
+        val label = textView.text.toString()
+        val spannableString = SpannableString(label)
+        for (portion in portions) {
+            val startIndex = label.indexOf(portion)
+            val endIndex = startIndex + portion.length
+            spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.pink)), startIndex, endIndex, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textView.movementMethod = LinkMovementMethod.getInstance()
+            textView.highlightColor = Color.TRANSPARENT
+        }
+        textView.text = spannableString
     }
 }

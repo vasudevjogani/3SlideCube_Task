@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20sdp"
-            android:layout_marginBottom="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_60sdp"
             android:text="@string/if_you_leave_this_page_you_will_loose_any_progress_made"
             android:textColor="@color/black" />
     </LinearLayout>

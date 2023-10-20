@@ -81,14 +81,13 @@
 
 	<style name="view_border_selector">
 		<item name="android:background">@drawable/selector_bg</item>
-		<item name="android:paddingVertical">@dimen/_10sdp</item>
-		<item name="android:paddingHorizontal">@dimen/_12sdp</item>
+		<item name="android:padding">@dimen/_12sdp</item>
 		<item name="android:elevation">6dp</item>
 		<item name="elevation">6dp</item>
 	</style>
 
 	<style name="edittext_border">
-		<item name="android:background">@drawable/bg_gray_border</item>
+		<item name="android:background">@drawable/bg_black_border</item>
 		<item name="android:paddingVertical">@dimen/_10sdp</item>
 		<item name="android:paddingHorizontal">@dimen/_12sdp</item>
 		<item name="android:fontFamily">@font/anonymous_pro_regular</item>
