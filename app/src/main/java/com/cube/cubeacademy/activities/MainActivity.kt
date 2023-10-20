@@ -12,6 +12,10 @@ import com.cube.cubeacademy.databinding.ActivityMainBinding
 import com.cube.cubeacademy.lib.adapters.NominationsRecyclerViewAdapter
 import com.cube.cubeacademy.lib.di.Repository
 import com.cube.cubeacademy.lib.eventbus.NominationAdded
+import com.cube.cubeacademy.lib.models.Nomination
+import com.cube.cubeacademy.lib.models.ResultWrapper
+import com.cube.cubeacademy.utility.extention.showErrorToast
+import com.cube.cubeacademy.utility.extention.showNoInternetToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,41 +86,75 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * This will get Nomination list from server populate adapter with data.
-     * And get Nominee List from server for mapping the name.
+     * This will get Nomination list from server.
      */
-    private fun callNominationList(isRefresh:Boolean) {
+    private fun callNominationList(isRefresh: Boolean) {
         if (!isRefresh) {
             showLoading(isShowLoading = true, isShowError = false)
         }
         lifecycleScope.launch {
-            val nominationList = repository.getAllNominations()
-
-            if (nominationList.isNotEmpty()) {
-                val nomineeList = repository.getAllNominees()
-
-                if (nomineeList.isNotEmpty()) {
-                    nominationAdapter.nomineeList = nomineeList
-
-                    launch(Dispatchers.Main) {
-                        nominationAdapter.submitList(nominationList)
-                        showLoading(isShowLoading = false, isShowError = false)
-                    }
-                } else {
+            when (val nominationListResponse = repository.getAllNominations()) {
+                is ResultWrapper.GenericError -> {
                     showLoading(isShowLoading = false, isShowError = true)
-                    Toast.makeText(this@MainActivity,getString(R.string.something_went_wrong_please_try_again_later), Toast.LENGTH_LONG).show()
+                    showErrorToast()
                 }
-            } else {
-                showLoading(isShowLoading = false, isShowError = true)
+
+                is ResultWrapper.NetworkError -> {
+                    showLoading(isShowLoading = false, isShowError = true)
+                    showNoInternetToast()
+                }
+
+                is ResultWrapper.Success -> {
+                    val nominationList = nominationListResponse.value
+
+                    if (nominationList.isNotEmpty()) {
+                        callNomineeList(nominationList)
+                    } else {
+                        showLoading(isShowLoading = false, isShowError = true)
+                    }
+                }
             }
             binding.swRefresh.isRefreshing = false
         }
     }
 
     /**
+     * This will get Nominee List from server for mapping the nominee name and populate adapter with data.
+     */
+    private fun callNomineeList(nominationList: List<Nomination>) {
+        lifecycleScope.launch {
+            when (val nomineeListResponse = repository.getAllNominees()) {
+                is ResultWrapper.GenericError -> {
+                    showLoading(isShowLoading = false, isShowError = true)
+                    showErrorToast()
+                }
+
+                is ResultWrapper.NetworkError -> {
+                    showLoading(isShowLoading = false, isShowError = true)
+                    showNoInternetToast()
+                }
+
+                is ResultWrapper.Success -> {
+                    val nomineeList = nomineeListResponse.value
+                    if (nomineeList.isNotEmpty()) {
+                        nominationAdapter.nomineeList = nomineeList
+
+                        launch(Dispatchers.Main) {
+                            nominationAdapter.submitList(nominationList)
+                            showLoading(isShowLoading = false, isShowError = false)
+                        }
+                    } else {
+                        showLoading(isShowLoading = false, isShowError = true)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Show progress loader or error view based on api status
      */
-    private fun showLoading(isShowLoading:Boolean, isShowError:Boolean) {
+    private fun showLoading(isShowLoading: Boolean, isShowError: Boolean) {
         binding.nominationsList.visibility = if (!isShowLoading && !isShowError) View.VISIBLE else View.GONE
         binding.progressBar.visibility = if (isShowLoading) View.VISIBLE else View.GONE
         binding.emptyContainer.visibility = if (isShowError) View.VISIBLE else View.GONE

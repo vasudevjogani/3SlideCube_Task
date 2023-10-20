@@ -1,22 +1,14 @@
 package com.cube.cubeacademy.utility.extention
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.widget.Toast
+import com.cube.cubeacademy.R
 
-fun Context.isNetworkAvailable(): Boolean {
-    var result = false
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-    cm?.run {
-        cm.getNetworkCapabilities(cm.activeNetwork)?.run {
-            result = when {
-                hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        }
-    }
-    return result
+fun Context.showErrorToast() {
+    Toast.makeText(this, this.getString(R.string.something_went_wrong_please_try_again_later), Toast.LENGTH_LONG).show()
+}
+
+fun Context.showNoInternetToast() {
+    Toast.makeText(this, this.getString(R.string.no_internet_connection_please_try_again_later), Toast.LENGTH_LONG).show()
 }
 

@@ -1,6 +1,7 @@
 package com.cube.cubeacademy
 
 import com.cube.cubeacademy.lib.di.Repository
+import com.cube.cubeacademy.lib.models.ResultWrapper
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
@@ -26,21 +27,36 @@ class RepositoryTest {
     @Test
     fun getNominationsTest() = runBlocking {
         // TODO: Write a test for getting all the nominations from the mock api
-        val results = repository.getAllNominations()
-        Assert.assertEquals(4, results.size)
+        when (val results = repository.getAllNominations()) {
+            is ResultWrapper.GenericError -> TODO()
+            is ResultWrapper.NetworkError -> TODO()
+            is ResultWrapper.Success -> {
+                Assert.assertEquals(4, results.value.size)
+            }
+        }
     }
 
     @Test
     fun getNomineesTest() = runBlocking {
         // TODO: Write a test for getting all the nominees from the mock api
-        val result = repository.getAllNominees()
-        Assert.assertEquals(3, result.size)
+        when (val results = repository.getAllNominees()) {
+            is ResultWrapper.GenericError -> TODO()
+            is ResultWrapper.NetworkError -> TODO()
+            is ResultWrapper.Success -> {
+                Assert.assertEquals(3, results.value.size)
+            }
+        }
     }
 
     @Test
     fun createNominationTest() = runBlocking {
         // TODO: Write a test for creating a new nomination using the mock api
-        val result = repository.createNomination("123", "good", "unfair")
-        Assert.assertEquals("3", result?.nominationId)
+        when (val results = repository.createNomination("123", "good", "unfair")) {
+            is ResultWrapper.GenericError -> TODO()
+            is ResultWrapper.NetworkError -> TODO()
+            is ResultWrapper.Success -> {
+                Assert.assertEquals("3", results.value?.nominationId)
+            }
+        }
     }
 }

@@ -21,7 +21,6 @@ class NominationSubmittedActivity : AppCompatActivity() {
         /**
          * TODO: Add the logic for the two buttons (Don't forget that if you start to add a new nomination, the back button shouldn't come back here)
          */
-
         setListeners()
     }
 

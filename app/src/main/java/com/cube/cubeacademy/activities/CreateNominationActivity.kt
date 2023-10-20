@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
@@ -15,7 +14,10 @@ import com.cube.cubeacademy.lib.adapters.NomineeAdapter
 import com.cube.cubeacademy.lib.di.Repository
 import com.cube.cubeacademy.lib.eventbus.NominationAdded
 import com.cube.cubeacademy.lib.models.Nominee
+import com.cube.cubeacademy.lib.models.ResultWrapper
 import com.cube.cubeacademy.utility.dialog.ConfirmationBottomSheetDialogFragment
+import com.cube.cubeacademy.utility.extention.showErrorToast
+import com.cube.cubeacademy.utility.extention.showNoInternetToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,10 +82,10 @@ class CreateNominationActivity : AppCompatActivity() {
         binding.spNominee.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, l: Long) {
                 val item = parent.getItemAtPosition(position)
-                if ((item as Nominee).nomineeId.isNotEmpty()) {
-                    selectedNomineeId = item.nomineeId
+                selectedNomineeId = if ((item as Nominee).nomineeId.isNotEmpty()) {
+                    item.nomineeId
                 } else {
-                    selectedNomineeId = ""
+                    ""
                 }
                 updateSubmitButtonState()
             }
@@ -104,7 +106,7 @@ class CreateNominationActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             val bottomSheet = ConfirmationBottomSheetDialogFragment()
             bottomSheet.clickListener = {
-                if (it){
+                if (it) {
                     finish()
                 } else {
                     // Cancel
@@ -119,14 +121,37 @@ class CreateNominationActivity : AppCompatActivity() {
      */
     private fun callNomineeList() {
         lifecycleScope.launch {
-            val nomineeList = repository.getAllNominees()
-            launch(Dispatchers.Main) {
-                val nominee = Nominee("", getString(R.string.select_option), "")
-                nomineeList.add(0, nominee)
-                val nomineeAdapter = NomineeAdapter(this@CreateNominationActivity, R.layout.view_nominee_list_item, nomineeList)
-                binding.spNominee.adapter = nomineeAdapter
+            when (val nomineeListResponse = repository.getAllNominees()) {
+                is ResultWrapper.GenericError -> {
+                    setSpinnerAdapter(arrayListOf())
+                    showErrorToast()
+                }
+
+                is ResultWrapper.NetworkError -> {
+                    setSpinnerAdapter(arrayListOf())
+                    showNoInternetToast()
+                }
+
+                is ResultWrapper.Success -> {
+                    val nomineeList = nomineeListResponse.value
+                    if (nomineeList.isNotEmpty()) {
+                        launch(Dispatchers.Main) {
+                            setSpinnerAdapter(nomineeList)
+                        }
+                    }
+                }
             }
         }
+    }
+
+    /**
+     * Used to set adapter for spinner.
+     */
+    private fun setSpinnerAdapter(nomineeList: ArrayList<Nominee>) {
+        val nominee = Nominee("", getString(R.string.select_option), "")
+        nomineeList.add(0, nominee)
+        val nomineeAdapter = NomineeAdapter(this@CreateNominationActivity, R.layout.view_nominee_list_item, nomineeList)
+        binding.spNominee.adapter = nomineeAdapter
     }
 
     /**
@@ -135,16 +160,22 @@ class CreateNominationActivity : AppCompatActivity() {
      */
     private fun callNominationSubmit() {
         lifecycleScope.launch {
-            val nomination = repository.createNomination(selectedNomineeId, binding.etReasoning.text.toString(), processText)
 
-            if (nomination != null) {
-                launch(Dispatchers.Main) {
-                    EventBus.getDefault().post(NominationAdded())
-                    startActivity(Intent(this@CreateNominationActivity, NominationSubmittedActivity::class.java))
-                    finish()
+            when (val nominationResponse = repository.createNomination(selectedNomineeId, binding.etReasoning.text.toString(), processText)) {
+                is ResultWrapper.GenericError -> showErrorToast()
+                is ResultWrapper.NetworkError -> showNoInternetToast()
+                is ResultWrapper.Success -> {
+                    val nomination = nominationResponse.value
+                    if (nomination != null) {
+                        launch(Dispatchers.Main) {
+                            EventBus.getDefault().post(NominationAdded())
+                            startActivity(Intent(this@CreateNominationActivity, NominationSubmittedActivity::class.java))
+                            finish()
+                        }
+                    } else {
+                        showErrorToast()
+                    }
                 }
-            } else {
-                Toast.makeText(this@CreateNominationActivity, getString(R.string.something_went_wrong_please_try_again_later),Toast.LENGTH_LONG).show()
             }
         }
     }

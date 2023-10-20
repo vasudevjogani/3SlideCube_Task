@@ -24,8 +24,6 @@
 	<string name="fair">Fair</string>
 	<string name="very_fair">Very Fair</string>
 	<string name="select_option">Select Option</string>
-	<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 	<string name="are_you_sure">Are you sure?</string>
 	<string name="if_you_leave_this_page_you_will_loose_any_progress_made">If you leave this page, you will loose any progress made.</string>
 	<string name="yes_leave_page">Yes, leave page</string>
