@@ -26,8 +26,8 @@ class NominationsRecyclerViewAdapter : ListAdapter<Nomination, NominationsRecycl
             /**
              * TODO: This should show the nominee name instead of their id! Where can you get their name from?
              */
-            val nomineeName = nomineeList.find { nominee -> nominee.nomineeId == item.nomineeId }
-            "${nomineeName?.firstName} ${nomineeName?.lastName}".also { name.text = it }
+            val nominee = nomineeList.find { nominee -> nominee.nomineeId == item.nomineeId }
+            "${nominee?.firstName} ${nominee?.lastName}".also { name.text = it }
             reason.text = item.reason
         }
     }

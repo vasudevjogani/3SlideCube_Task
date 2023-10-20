@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
@@ -52,25 +53,28 @@ class CreateNominationActivity : AppCompatActivity() {
         callNomineeList()
     }
 
+    /**
+     * Used to set listener on UI elements
+     */
     private fun setListeners() {
         binding.constraintVeryUnfair.setOnClickListener {
-            manageFeedbackButtons(it as ConstraintLayout, getString(R.string.very_unfair_value))
+            updateFeedbackButtons(it as ConstraintLayout, getString(R.string.very_unfair_value))
         }
 
         binding.constraintUnfair.setOnClickListener {
-            manageFeedbackButtons(it as ConstraintLayout, getString(R.string.unfair_value))
+            updateFeedbackButtons(it as ConstraintLayout, getString(R.string.unfair_value))
         }
 
         binding.constraintNotSure.setOnClickListener {
-            manageFeedbackButtons(it as ConstraintLayout, getString(R.string.not_sure_value))
+            updateFeedbackButtons(it as ConstraintLayout, getString(R.string.not_sure_value))
         }
 
         binding.constraintFair.setOnClickListener {
-            manageFeedbackButtons(it as ConstraintLayout, getString(R.string.fair_value))
+            updateFeedbackButtons(it as ConstraintLayout, getString(R.string.fair_value))
         }
 
         binding.constraintVeryFair.setOnClickListener {
-            manageFeedbackButtons(it as ConstraintLayout, getString(R.string.very_fair_value))
+            updateFeedbackButtons(it as ConstraintLayout, getString(R.string.very_fair_value))
         }
 
         binding.spNominee.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -81,14 +85,14 @@ class CreateNominationActivity : AppCompatActivity() {
                 } else {
                     selectedNomineeId = ""
                 }
-                updateSubmitButton()
+                updateSubmitButtonState()
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
 
         binding.etReasoning.doAfterTextChanged {
-            updateSubmitButton()
+            updateSubmitButtonState()
         }
 
         binding.submitButton.setOnClickListener {
@@ -110,6 +114,9 @@ class CreateNominationActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get All nominees from api and populate spinner with adapter
+     */
     private fun callNomineeList() {
         lifecycleScope.launch {
             val nomineeList = repository.getAllNominees()
@@ -122,19 +129,30 @@ class CreateNominationActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Used to create nomination on server and send event to main activity so nomination list refresh automatically.
+     * And redirect to NominationSubmittedActivity when create nomination is success.
+     */
     private fun callNominationSubmit() {
         lifecycleScope.launch {
             val nomination = repository.createNomination(selectedNomineeId, binding.etReasoning.text.toString(), processText)
 
-            launch(Dispatchers.Main) {
-                EventBus.getDefault().post(NominationAdded())
-                startActivity(Intent(this@CreateNominationActivity, NominationSubmittedActivity::class.java))
-                finish()
+            if (nomination != null) {
+                launch(Dispatchers.Main) {
+                    EventBus.getDefault().post(NominationAdded())
+                    startActivity(Intent(this@CreateNominationActivity, NominationSubmittedActivity::class.java))
+                    finish()
+                }
+            } else {
+                Toast.makeText(this@CreateNominationActivity, getString(R.string.something_went_wrong_please_try_again_later),Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun manageFeedbackButtons(view: ConstraintLayout, process: String) {
+    /**
+     * Update feedback buttons UI state based on selection.
+     */
+    private fun updateFeedbackButtons(view: ConstraintLayout, process: String) {
         binding.constraintVeryUnfair.isSelected = view == binding.constraintVeryUnfair
         binding.radioVeryUnfair.isSelected = view == binding.constraintVeryUnfair
         binding.constraintUnfair.isSelected = view == binding.constraintUnfair
@@ -147,10 +165,15 @@ class CreateNominationActivity : AppCompatActivity() {
         binding.radioVeryFair.isSelected = view == binding.constraintVeryFair
         isProcess = true
         processText = process
-        updateSubmitButton()
+        updateSubmitButtonState()
     }
 
-    private fun updateSubmitButton() {
+    /**
+     * Enable or Disable submit button based on form fields.
+     * Enable when form is filled.
+     * Disable when form is not filled.
+     */
+    private fun updateSubmitButtonState() {
         binding.submitButton.isEnabled = selectedNomineeId.isNotEmpty() && !binding.etReasoning.text.isNullOrEmpty() && isProcess
     }
 }

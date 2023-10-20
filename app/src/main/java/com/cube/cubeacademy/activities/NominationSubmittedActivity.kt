@@ -25,12 +25,21 @@ class NominationSubmittedActivity : AppCompatActivity() {
         setListeners()
     }
 
+    /**
+     * Used to set listener on UI elements
+     */
     private fun setListeners() {
         binding.backButton.setOnClickListener {
+            /**
+             * Only finishing this activity so previous activity (MainActivity) resume.
+             */
             finish()
         }
 
         binding.submitButton.setOnClickListener {
+            /**
+             * Starting CreateNominationActivity and finishing this activity so that this activity not resume on back.
+             */
             startActivity(Intent(this, CreateNominationActivity::class.java))
             finish()
         }

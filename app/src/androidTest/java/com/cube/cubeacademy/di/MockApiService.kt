@@ -17,9 +17,9 @@ class MockApiService : ApiService {
 		)
 	}
 
-	override suspend fun getAllNominees(): DataWrapper<List<Nominee>> {
+	override suspend fun getAllNominees(): DataWrapper<ArrayList<Nominee>> {
 		return DataWrapper(
-			listOf(
+			arrayListOf(
 				Nominee("1", "FirstTest1", "LastTest1"),
 				Nominee("2", "FirstTest2", "LastTest2"),
 				Nominee("3", "FirstTest3", "LastTest3"),

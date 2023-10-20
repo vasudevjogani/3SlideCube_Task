@@ -27,41 +27,12 @@
         style="@style/bold_headline_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="24dp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginVertical="@dimen/_24sdp"
         android:text="@string/your_nominations_title"
         android:textAllCaps="true"
         android:textColor="@color/black" />
 
-    <LinearLayout
-        android:id="@+id/empty_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/grey_light"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="30dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_70sdp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_empty" />
-
-        <TextView
-            style="@style/bold_headline_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_24sdp"
-            android:text="@string/empty_body"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/grey_dark" />
-
-    </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sw_refresh"
@@ -72,6 +43,38 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/empty_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/grey_light"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_30sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_empty" />
+
+                <TextView
+                    style="@style/bold_headline_medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:text="@string/empty_body"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_dark" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/nominations_list"
